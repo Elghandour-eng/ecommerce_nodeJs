@@ -7,6 +7,9 @@ const dotenv = require("dotenv");
 // Import the morgan module for HTTP request logging
 const morgan = require("morgan");
 
+// Import the mongoose module for MongoDB interaction
+const mongoose = require("mongoose");
+
 // Load environment variables from a .env file into process.env
 dotenv.config({ path: "config.env" });
 
@@ -20,6 +23,24 @@ if (process.env.NODE_ENV === 'development') {
     // Log a message to the console indicating the app is in development mode
     console.log("App in development mode");
 }
+
+// MongoDB connection string
+const DB_URL = process.env.DB_URL;
+const DB_PORT = process.env.DB_PORT;
+const DB_NAME = process.env.DB_NAME;
+const DB_USER = process.env.DB_USER;
+const DB_PASSWORD = process.env.DB_PASSWORD;
+
+// Construct the MongoDB connection string
+const mongoURI = `mongodb://${DB_USER}:${DB_PASSWORD}@${DB_URL}:${DB_PORT}/${DB_NAME}`;
+
+// Connect to MongoDB using Mongoose
+mongoose.connect(mongoURI, {
+}).then(() => {
+    console.log("Connected to MongoDB successfully");
+}).catch((err) => {
+    console.error("Error connecting to MongoDB:", err);
+});
 
 // Define a route handler for the root URL ("/")
 app.get("/", (req, res) => {
